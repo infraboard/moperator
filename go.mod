@@ -3,8 +3,7 @@ module github.com/infraboard/moperator
 go 1.19
 
 require (
-	github.com/infraboard/mcenter v0.0.8-0.20230216073911-c384cb3699f4
-	github.com/infraboard/mpaas v0.0.0-20230307002840-3ae5b7f0a380
+	github.com/infraboard/mpaas v0.0.2-0.20230307023153-126bd759efa6
 	k8s.io/api v0.26.1
 	k8s.io/apimachinery v0.26.1
 	k8s.io/client-go v0.26.1
@@ -35,6 +34,7 @@ require (
 	github.com/google/gofuzz v1.1.0 // indirect
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/imdario/mergo v0.3.13 // indirect
+	github.com/infraboard/mcenter v0.0.9-0.20230307022053-a9954a0d84c3 // indirect
 	github.com/infraboard/mcube v1.9.7 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect

@@ -34,8 +34,7 @@ import (
 
 	//+kubebuilder:scaffold:imports
 
-	mcenterrpc "github.com/infraboard/mcenter/client/rpc"
-	mpaasrpc "github.com/infraboard/mpaas/client/rpc"
+	mpaas "github.com/infraboard/mpaas/client/rpc"
 )
 
 var (
@@ -64,13 +63,10 @@ func main() {
 	opts.BindFlags(flag.CommandLine)
 	flag.Parse()
 
-	// 加载Mpaas Client
-	if err := mcenterrpc.LoadClientFromEnv(); err != nil {
-		setupLog.Error(err, "unable to load mcenter client")
+	if err := mpaas.LoadClientFromEnv(); err != nil {
+		setupLog.Error(err, "load mpaas client error")
 		os.Exit(1)
 	}
-	conf := &mcenterrpc.Config{}
-	mpaasrpc.NewClientSet(conf)
 
 	ctrl.SetLogger(zap.New(zap.UseFlagOptions(&opts)))
 
