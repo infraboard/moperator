@@ -31,7 +31,11 @@ import (
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
+
 	//+kubebuilder:scaffold:imports
+
+	mcenterrpc "github.com/infraboard/mcenter/client/rpc"
+	mpaasrpc "github.com/infraboard/mpaas/client/rpc"
 )
 
 var (
@@ -59,6 +63,14 @@ func main() {
 	}
 	opts.BindFlags(flag.CommandLine)
 	flag.Parse()
+
+	// 加载Mpaas Client
+	if err := mcenterrpc.LoadClientFromEnv(); err != nil {
+		setupLog.Error(err, "unable to load mcenter client")
+		os.Exit(1)
+	}
+	conf := &mcenterrpc.Config{}
+	mpaasrpc.NewClientSet(conf)
 
 	ctrl.SetLogger(zap.New(zap.UseFlagOptions(&opts)))
 
