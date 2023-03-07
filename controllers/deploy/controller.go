@@ -104,6 +104,11 @@ func (r *DeployReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctr
 		}
 	}
 
+	if updateReq.Stage.Equal(task.STAGE_PENDDING) {
+		l.Info("task status is pendding, skip update")
+		return ctrl.Result{}, nil
+	}
+
 	// 比对状态, 状态没变化不更新
 	if t.Status.Stage.Equal(updateReq.Stage) {
 		l.Info(fmt.Sprintf("task status is %s, not changed", updateReq.Stage))
