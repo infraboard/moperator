@@ -97,7 +97,6 @@ func (r *JobReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.R
 				updateReq.Stage = task.STAGE_SUCCEEDED
 				updateReq.Message = "执行成功"
 			}
-			updateReq.Stage = task.STAGE_SUCCEEDED
 		case batchv1.JobSuspended:
 			if cond.Status == corev1.ConditionTrue {
 				updateReq.Stage = task.STAGE_ACTIVE
