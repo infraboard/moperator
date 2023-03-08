@@ -22,7 +22,9 @@ import (
 
 	// Import all Kubernetes client auth plugins (e.g. Azure, GCP, OIDC, etc.)
 	// to ensure that exec-entrypoint and run can make use of them.
+	"github.com/infraboard/moperator/controllers/deployment"
 	"github.com/infraboard/moperator/controllers/job"
+	"github.com/infraboard/moperator/controllers/statefulset"
 	_ "k8s.io/client-go/plugin/pkg/client/auth"
 
 	"k8s.io/apimachinery/pkg/runtime"
@@ -95,11 +97,25 @@ func main() {
 		os.Exit(1)
 	}
 
-	if err = (&job.JobReconciler{
+	if err = (&job.Reconciler{
 		Client: mgr.GetClient(),
 		Scheme: mgr.GetScheme(),
 	}).SetupWithManager(mgr); err != nil {
-		setupLog.Error(err, "unable to create controller", "controller", "Service")
+		setupLog.Error(err, "unable to create controller", "controller", "job")
+		os.Exit(1)
+	}
+	if err = (&deployment.Reconciler{
+		Client: mgr.GetClient(),
+		Scheme: mgr.GetScheme(),
+	}).SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "deployment")
+		os.Exit(1)
+	}
+	if err = (&statefulset.Reconciler{
+		Client: mgr.GetClient(),
+		Scheme: mgr.GetScheme(),
+	}).SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "statefulset")
 		os.Exit(1)
 	}
 

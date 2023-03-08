@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package deploy
+package deployment
 
 import (
 	"context"
@@ -33,8 +33,8 @@ import (
 	mpaas "github.com/infraboard/mpaas/client/rpc"
 )
 
-// DeployReconciler reconciles a Deploy object
-type DeployReconciler struct {
+// Reconciler reconciles a Deploy object
+type Reconciler struct {
 	client.Client
 	Scheme *runtime.Scheme
 
@@ -54,7 +54,7 @@ type DeployReconciler struct {
 //
 // For more details, check Reconcile and its Result here:
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.14.1/pkg/reconcile
-func (r *DeployReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
+func (r *Reconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	// 获取日志对象
 	l := log.FromContext(ctx)
 
@@ -79,6 +79,7 @@ func (r *DeployReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctr
 	t, err := r.mpaas.JobTask().DescribeJobTask(ctx, task.NewDescribeJobTaskRequest(taskId))
 	if err != nil {
 		l.Error(err, "get task error")
+		return ctrl.Result{}, nil
 	}
 
 	// 判断job当前状态
@@ -130,7 +131,7 @@ func (r *DeployReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctr
 }
 
 // SetupWithManager sets up the controller with the Manager.
-func (r *DeployReconciler) SetupWithManager(mgr ctrl.Manager) error {
+func (r *Reconciler) SetupWithManager(mgr ctrl.Manager) error {
 	r.mpaas = mpaas.C()
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&appsv1.Deployment{}).
