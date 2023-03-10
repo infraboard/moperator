@@ -18,6 +18,7 @@ package deployment
 
 import (
 	"context"
+	"os"
 
 	appsv1 "k8s.io/api/apps/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
@@ -35,6 +36,7 @@ type Reconciler struct {
 	Scheme *runtime.Scheme
 
 	mpaas *mpaas.ClientSet
+	name  string
 }
 
 //+kubebuilder:rbac:groups=traefik.devcloud.com,resources=NodeServices,verbs=get;list;watch;create;update;patch;delete
@@ -82,6 +84,7 @@ func (r *Reconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Resu
 // SetupWithManager sets up the controller with the Manager.
 func (r *Reconciler) SetupWithManager(mgr ctrl.Manager) error {
 	r.mpaas = mpaas.C()
+	r.name, _ = os.Hostname()
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&appsv1.Deployment{}).
 		Complete(r)
