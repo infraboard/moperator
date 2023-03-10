@@ -18,12 +18,8 @@ package deployment
 
 import (
 	"context"
-	"fmt"
 
-	"github.com/infraboard/mpaas/apps/task"
-	"github.com/infraboard/mpaas/common/format"
 	appsv1 "k8s.io/api/apps/v1"
-	corev1 "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
@@ -68,64 +64,17 @@ func (r *Reconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Resu
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
 
-	// 根据注解获取task id
-	taskId := obj.Annotations[task.ANNOTATION_TASK_ID]
-	if taskId == "" {
-		return ctrl.Result{}, nil
-	}
-	l.Info(fmt.Sprintf("get mpaas job: %s", taskId))
-
-	// 查询Task
-	t, err := r.mpaas.JobTask().DescribeJobTask(ctx, task.NewDescribeJobTaskRequest(taskId))
+	// 处理task注解: task.mpaas.inforboar.io/id
+	err := r.HandleJobTask(ctx, obj)
 	if err != nil {
-		l.Error(err, "get task error")
-		return ctrl.Result{}, nil
+		l.Error(err, "hanle job task error")
 	}
 
-	// 判断job当前状态
-	updateReq := task.NewUpdateJobTaskStatusRequest(taskId)
-	for _, cond := range obj.Status.Conditions {
-		switch cond.Type {
-		case appsv1.DeploymentReplicaFailure:
-			if cond.Status == corev1.ConditionTrue {
-				updateReq.Stage = task.STAGE_FAILED
-				if cond.Message != "" {
-					updateReq.Message = fmt.Sprintf("%s, %s", cond.Reason, cond.Message)
-				}
-			}
-		case appsv1.DeploymentAvailable:
-			if cond.Status == corev1.ConditionTrue {
-				updateReq.Stage = task.STAGE_SUCCEEDED
-				updateReq.Message = "执行成功"
-			}
-		case appsv1.DeploymentProgressing:
-			if cond.Status == corev1.ConditionTrue {
-				updateReq.Stage = task.STAGE_ACTIVE
-			}
-		}
-	}
-
-	if updateReq.Stage.Equal(task.STAGE_PENDDING) {
-		l.Info("task status is pendding, skip update")
-		return ctrl.Result{}, nil
-	}
-
-	// 比对状态, 状态没变化不更新
-	if t.Status.Stage.Equal(updateReq.Stage) {
-		l.Info(fmt.Sprintf("task status is %s, not changed", updateReq.Stage))
-		return ctrl.Result{}, nil
-	}
-
-	// 状态变化更新
-	updateReq.UpdateToken = t.Spec.UpdateToken
-	updateReq.Detail = format.MustToYaml(obj)
-	_, err = r.mpaas.JobTask().UpdateJobTaskStatus(ctx, updateReq)
+	// 处理deploy注解: deploy.mpaas.inforboard.io/id
+	err = r.HandleDeploy(ctx, obj)
 	if err != nil {
-		l.Error(err, "update failed")
-		return ctrl.Result{}, nil
+		l.Error(err, "hanle deploy error")
 	}
-
-	l.Info("update success")
 
 	return ctrl.Result{}, nil
 }
