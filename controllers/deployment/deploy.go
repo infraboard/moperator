@@ -6,6 +6,7 @@ import (
 
 	"github.com/infraboard/mpaas/apps/deploy"
 	"github.com/infraboard/mpaas/common/format"
+	"github.com/infraboard/mpaas/provider/k8s/workload"
 	appsv1 "k8s.io/api/apps/v1"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 )
@@ -30,7 +31,7 @@ func (r *Reconciler) HandleDeploy(ctx context.Context, obj appsv1.Deployment) er
 	// 更新Depoy
 	updateReq := deploy.NewUpdateDeploymentStatusRequest(deployId)
 	updateReq.UpdateToken = ins.Credential.Token
-	obj.Kind = "Deployment"
+	updateReq.UpdatedK8SConfig.WorkloadKind = workload.WORKLOAD_KIND_DEPLOYMENT.String()
 	updateReq.UpdatedK8SConfig.WorkloadConfig = format.MustToYaml(obj)
 	updateReq.UpdateBy = r.name
 	_, err = r.mpaas.Deploy().UpdateDeploymentStatus(ctx, updateReq)
