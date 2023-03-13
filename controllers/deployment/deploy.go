@@ -30,7 +30,10 @@ func (r *Reconciler) HandleDeploy(ctx context.Context, obj appsv1.Deployment) er
 
 	// 更新Depoy
 	updateReq := deploy.NewUpdateDeploymentStatusRequest(deployId)
-	updateReq.UpdateToken = ins.Credential.Token
+	if ins.Credential != nil {
+		updateReq.UpdateToken = ins.Credential.Token
+	}
+
 	updateReq.UpdatedK8SConfig.WorkloadKind = workload.WORKLOAD_KIND_DEPLOYMENT.String()
 	updateReq.UpdatedK8SConfig.WorkloadConfig = format.MustToYaml(obj)
 	updateReq.UpdateBy = r.name

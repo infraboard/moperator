@@ -3,7 +3,7 @@ module github.com/infraboard/moperator
 go 1.19
 
 require (
-	github.com/infraboard/mpaas v0.0.2-0.20230310083738-eb8ca64e26fd
+	github.com/infraboard/mpaas v0.0.2-0.20230313045055-7c28b70f8fa0
 	k8s.io/api v0.26.1
 	k8s.io/apimachinery v0.26.1
 	k8s.io/client-go v0.26.1
