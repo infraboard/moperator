@@ -1,6 +1,10 @@
 
 # Image URL to use all building/pushing image targets
-IMG ?= controller:latest
+BUILD_BRANCH := $(shell git rev-parse --abbrev-ref HEAD)
+IMAGE_BUILD_TIME := ${shell date '+%Y%m%d'}
+IMAGE_BUILD_COMMIT :=  ${shell git rev-parse HEAD | cut -c 1-8}
+IMG ?= "moperator:${IMAGE_BUILD_TIME}-${BUILD_BRANCH}-${IMAGE_BUILD_COMMIT}"
+
 # ENVTEST_K8S_VERSION refers to the version of kubebuilder assets to be downloaded by envtest binary.
 ENVTEST_K8S_VERSION = 1.26.0
 
