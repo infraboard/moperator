@@ -199,8 +199,8 @@ github.com/infraboard/mcenter v0.0.10-0.20230412052339-06ca94c2c535 h1:OMwcsnh1I
 github.com/infraboard/mcenter v0.0.10-0.20230412052339-06ca94c2c535/go.mod h1:7LAcpcLdL/WRBzN7eCXTh+wEQeStNRThcgJI/GfzCIA=
 github.com/infraboard/mcube v1.9.15 h1:8cF2X1bAiS+MGnlCV/rRG0XieD93oJ3y6IGBeYwr2BI=
 github.com/infraboard/mcube v1.9.15/go.mod h1:E98p1NbQ+GFKD1DaBaFZK2V0iN9VK9jbyM2mmoU8VME=
-github.com/infraboard/mpaas v0.0.2-0.20230313045055-7c28b70f8fa0 h1:re5xu+QwjSc9X//zIGi3OkwMRa2lYyLC95+kw8L8MCA=
-github.com/infraboard/mpaas v0.0.2-0.20230313045055-7c28b70f8fa0/go.mod h1:/+Xpf8RUYkM7HKiZG+QxkMs5YBYyCQnKKCxvY2eVuz4=
+github.com/infraboard/mpaas v0.0.2 h1:soqwZ9dARJRvz3XEKJfYneaez8lPkt8bo+DJpP8SEfI=
+github.com/infraboard/mpaas v0.0.2/go.mod h1:U+s5JjnmrxoDNo0QPP2N0+oaaPZ3RCx0Tx+oQQIotmo=
 github.com/jessevdk/go-flags v1.4.0/go.mod h1:4FA24M0QyGHXBuZZK/XkWh8h0e1EYbRYJSGM75WSRxI=
 github.com/josharian/intern v1.0.0 h1:vlS4z54oSdjm0bgjRigI+G1HpF+tI+9rE5LLzOg8HmY=
 github.com/josharian/intern v1.0.0/go.mod h1:5DoeVV0s6jJacbCEi61lwdGj/aVlrQvzHFFd8Hwg//Y=
