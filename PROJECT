@@ -2,9 +2,23 @@
 # This file is used to track the info used to scaffold your project
 # and allow the plugins properly work.
 # More info: https://book.kubebuilder.io/reference/project-config.html
-domain: devcloud.com
+domain: mdevcloud.com
 layout:
-- go.kubebuilder.io/v3
-projectName: operator
+- go.kubebuilder.io/v4
+projectName: moperator
 repo: github.com/infraboard/moperator
+resources:
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: mdevcloud.com
+  group: mpaas
+  kind: Pod
+  path: github.com/infraboard/moperator/api/v1
+  version: v1
+  webhooks:
+    defaulting: true
+    validation: true
+    webhookVersion: v1
 version: "3"

@@ -1,5 +1,5 @@
 /*
-Copyright 2023.
+Copyright 2023 maojun.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -22,9 +22,6 @@ import (
 
 	// Import all Kubernetes client auth plugins (e.g. Azure, GCP, OIDC, etc.)
 	// to ensure that exec-entrypoint and run can make use of them.
-	"github.com/infraboard/moperator/controllers/deployment"
-	"github.com/infraboard/moperator/controllers/job"
-	"github.com/infraboard/moperator/controllers/statefulset"
 	_ "k8s.io/client-go/plugin/pkg/client/auth"
 
 	"k8s.io/apimachinery/pkg/runtime"
@@ -33,6 +30,11 @@ import (
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
+
+	mpaasv1 "github.com/infraboard/moperator/api/v1"
+	"github.com/infraboard/moperator/internal/controller/deployment"
+	"github.com/infraboard/moperator/internal/controller/job"
+	"github.com/infraboard/moperator/internal/controller/statefulset"
 
 	//+kubebuilder:scaffold:imports
 
@@ -47,6 +49,7 @@ var (
 func init() {
 	utilruntime.Must(clientgoscheme.AddToScheme(scheme))
 
+	utilruntime.Must(mpaasv1.AddToScheme(scheme))
 	//+kubebuilder:scaffold:scheme
 }
 
@@ -79,7 +82,7 @@ func main() {
 		Port:                   9443,
 		HealthProbeBindAddress: probeAddr,
 		LeaderElection:         enableLeaderElection,
-		LeaderElectionID:       "967273a8.devcloud.com",
+		LeaderElectionID:       "0a04a608.mdevcloud.com",
 		// LeaderElectionReleaseOnCancel defines if the leader should step down voluntarily
 		// when the Manager ends. This requires the binary to immediately end when the
 		// Manager is stopped, otherwise, this setting is unsafe. Setting this significantly
@@ -118,7 +121,6 @@ func main() {
 		setupLog.Error(err, "unable to create controller", "controller", "statefulset")
 		os.Exit(1)
 	}
-
 	//+kubebuilder:scaffold:builder
 
 	if err := mgr.AddHealthzCheck("healthz", healthz.Ping); err != nil {
