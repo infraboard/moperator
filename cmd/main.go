@@ -31,6 +31,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
+	"github.com/infraboard/moperator/api/extensions/pod"
 	mpaasv1 "github.com/infraboard/moperator/api/v1"
 	"github.com/infraboard/moperator/internal/controller/deployment"
 	"github.com/infraboard/moperator/internal/controller/job"
@@ -100,6 +101,7 @@ func main() {
 		os.Exit(1)
 	}
 
+	// 注册controller
 	if err = (&job.Reconciler{
 		Client: mgr.GetClient(),
 		Scheme: mgr.GetScheme(),
@@ -121,7 +123,12 @@ func main() {
 		setupLog.Error(err, "unable to create controller", "controller", "statefulset")
 		os.Exit(1)
 	}
-	//+kubebuilder:scaffold:builder
+
+	// 注册Webhook
+	if err = (&pod.PodWebHook{}).SetupWebhookWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to pod webhook", "webhook", "pod")
+		os.Exit(1)
+	}
 
 	if err := mgr.AddHealthzCheck("healthz", healthz.Ping); err != nil {
 		setupLog.Error(err, "unable to set up health check")
