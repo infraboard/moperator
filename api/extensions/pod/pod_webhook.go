@@ -6,6 +6,7 @@ import (
 
 	"github.com/infraboard/mpaas/apps/deploy"
 	mpaas "github.com/infraboard/mpaas/client/rpc"
+	"github.com/infraboard/mpaas/provider/k8s/workload"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
@@ -35,8 +36,6 @@ func (r *PodWebHook) Default(ctx context.Context, obj runtime.Object) error {
 	if pod.Annotations == nil {
 		pod.Annotations = map[string]string{}
 	}
-	pod.Annotations["example-mutating-admission-webhook"] = "foo"
-	l.Info("Annotated Pod")
 
 	// 处理deploy注解: deploy.mpaas.inforboard.io/id
 	err := r.HandlePodEnvInject(ctx, pod)
@@ -56,7 +55,7 @@ func (r *PodWebHook) HandlePodEnvInject(ctx context.Context, obj *corev1.Pod) er
 	if deployId == "" {
 		return nil
 	}
-	l.Info(fmt.Sprintf("get mpaas deploy: %s", deployId))
+	l.Info(fmt.Sprintf("get mpaas deploy annotation: %s", deployId))
 
 	// 查询Pod需要注入的Env变量
 	queryEnv := deploy.NewQueryDeploymentInjectEnvRequest(deployId)
@@ -68,8 +67,9 @@ func (r *PodWebHook) HandlePodEnvInject(ctx context.Context, obj *corev1.Pod) er
 	// 注入变量
 	for i := range set.EnvGroups {
 		group := set.EnvGroups[i]
-		if group.Enabled {
-
+		// 符合匹配条件的才进行注入
+		if group.Enabled && group.IsLabelMatched(obj.Labels) {
+			workload.InjectPodEnvVars(&obj.Spec, group.ToContainerEnvVars())
 		}
 	}
 
