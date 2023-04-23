@@ -30,3 +30,8 @@ config.env
 unit_test.env
 kube_config.yml
 mpaas
+
+# 忽略证书文件
+*.csr
+*.pem
+
