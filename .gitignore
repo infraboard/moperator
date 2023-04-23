@@ -34,4 +34,5 @@ mpaas
 # 忽略证书文件
 *.csr
 *.pem
+csr.json
 
