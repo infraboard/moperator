@@ -77,6 +77,12 @@ func main() {
 		os.Exit(1)
 	}
 
+	//
+	certDir := ""
+	if os.Getenv("DEV") == "true" {
+		certDir = "./cert/"
+	}
+
 	mgr, err := ctrl.NewManager(ctrl.GetConfigOrDie(), ctrl.Options{
 		Scheme:                 scheme,
 		MetricsBindAddress:     metricsAddr,
@@ -95,6 +101,7 @@ func main() {
 		// if you are doing or is intended to do any operation such as perform cleanups
 		// after the manager stops then its usage might be unsafe.
 		// LeaderElectionReleaseOnCancel: true,
+		CertDir: certDir,
 	})
 	if err != nil {
 		setupLog.Error(err, "unable to start manager")
