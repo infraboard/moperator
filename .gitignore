@@ -32,6 +32,5 @@ kube_config.yml
 mpaas
 
 # 忽略证书文件
-*.crt
-*.key
+cert/*
 
