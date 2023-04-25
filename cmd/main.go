@@ -33,9 +33,6 @@ import (
 
 	"github.com/infraboard/moperator/api/extensions/pod"
 	mpaasv1 "github.com/infraboard/moperator/api/v1"
-	"github.com/infraboard/moperator/internal/controller/deployment"
-	"github.com/infraboard/moperator/internal/controller/job"
-	"github.com/infraboard/moperator/internal/controller/statefulset"
 
 	//+kubebuilder:scaffold:imports
 
@@ -109,27 +106,27 @@ func main() {
 	}
 
 	// 注册controller
-	if err = (&job.Reconciler{
-		Client: mgr.GetClient(),
-		Scheme: mgr.GetScheme(),
-	}).SetupWithManager(mgr); err != nil {
-		setupLog.Error(err, "unable to create controller", "controller", "job")
-		os.Exit(1)
-	}
-	if err = (&deployment.Reconciler{
-		Client: mgr.GetClient(),
-		Scheme: mgr.GetScheme(),
-	}).SetupWithManager(mgr); err != nil {
-		setupLog.Error(err, "unable to create controller", "controller", "deployment")
-		os.Exit(1)
-	}
-	if err = (&statefulset.Reconciler{
-		Client: mgr.GetClient(),
-		Scheme: mgr.GetScheme(),
-	}).SetupWithManager(mgr); err != nil {
-		setupLog.Error(err, "unable to create controller", "controller", "statefulset")
-		os.Exit(1)
-	}
+	// if err = (&job.Reconciler{
+	// 	Client: mgr.GetClient(),
+	// 	Scheme: mgr.GetScheme(),
+	// }).SetupWithManager(mgr); err != nil {
+	// 	setupLog.Error(err, "unable to create controller", "controller", "job")
+	// 	os.Exit(1)
+	// }
+	// if err = (&deployment.Reconciler{
+	// 	Client: mgr.GetClient(),
+	// 	Scheme: mgr.GetScheme(),
+	// }).SetupWithManager(mgr); err != nil {
+	// 	setupLog.Error(err, "unable to create controller", "controller", "deployment")
+	// 	os.Exit(1)
+	// }
+	// if err = (&statefulset.Reconciler{
+	// 	Client: mgr.GetClient(),
+	// 	Scheme: mgr.GetScheme(),
+	// }).SetupWithManager(mgr); err != nil {
+	// 	setupLog.Error(err, "unable to create controller", "controller", "statefulset")
+	// 	os.Exit(1)
+	// }
 
 	// 注册Webhook
 	if err = (&pod.PodWebHook{}).SetupWebhookWithManager(mgr); err != nil {

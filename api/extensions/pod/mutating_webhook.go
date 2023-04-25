@@ -5,25 +5,11 @@ import (
 	"fmt"
 
 	"github.com/infraboard/mpaas/apps/deploy"
-	mpaas "github.com/infraboard/mpaas/client/rpc"
 	"github.com/infraboard/mpaas/provider/k8s/workload"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/runtime"
-	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 )
-
-type PodWebHook struct {
-	mpaas *mpaas.ClientSet
-}
-
-func (r *PodWebHook) SetupWebhookWithManager(mgr ctrl.Manager) error {
-	r.mpaas = mpaas.C()
-	return ctrl.NewWebhookManagedBy(mgr).
-		For(&corev1.Pod{}).
-		WithDefaulter(&PodWebHook{}).
-		Complete()
-}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
 func (r *PodWebHook) Default(ctx context.Context, obj runtime.Object) error {
@@ -32,6 +18,8 @@ func (r *PodWebHook) Default(ctx context.Context, obj runtime.Object) error {
 	if !ok {
 		return fmt.Errorf("expected a Pod but got a %T", obj)
 	}
+
+	l.Info("get pod", "pod", pod)
 
 	if pod.Annotations == nil {
 		pod.Annotations = map[string]string{}
