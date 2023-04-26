@@ -1,4 +1,4 @@
-apiVersion: discovery.k8s.io/v1
+apiVersion: discovery.k8s.io/v1beta1
 kind: EndpointSlice
 metadata:
   name: moperator-1 # 按惯例将服务的名称用作 EndpointSlice 名称的前缀
@@ -14,4 +14,4 @@ ports:
     port: 9443
 endpoints:
   - addresses:
-      - "192.168.50.151" # 此列表中的 IP 地址可以按任何顺序显示
+      - "192.168.160.25" # 此列表中的 IP 地址可以按任何顺序显示

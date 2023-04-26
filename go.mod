@@ -3,6 +3,7 @@ module github.com/infraboard/moperator
 go 1.19
 
 require (
+	github.com/infraboard/mcube v1.9.16-0.20230426104702-fe4c08cb4a9d
 	github.com/infraboard/mpaas v0.0.3-0.20230423012827-92bc852df7ee
 	github.com/onsi/ginkgo/v2 v2.6.0
 	github.com/onsi/gomega v1.24.1
@@ -43,7 +44,6 @@ require (
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/imdario/mergo v0.3.13 // indirect
 	github.com/infraboard/mcenter v0.0.11-0.20230422010219-00d57d30af10 // indirect
-	github.com/infraboard/mcube v1.9.16-0.20230421132557-66c470b84164 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/klauspost/compress v1.14.2 // indirect

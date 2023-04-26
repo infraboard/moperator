@@ -30,8 +30,6 @@ If the files this script generates already exist and --overwrite is
 not set, it will not regenerate the files.
 ```
 
-
-
 ### 服务转发配置
 
 [没有选择算符的 Service](https://kubernetes.io/zh-cn/docs/concepts/services-networking/service/#services-without-selectors)
@@ -50,7 +48,7 @@ spec:
 直接使用yml创建:
 ```sh
 kubectl create -f docs/deploy/local/service.yml
-kubectl get svc
+kubectl get svc moperator -o yaml
 ```
 
 手动添加 EndpointSlice
@@ -77,7 +75,7 @@ endpoints:
 直接使用yml创建:
 ```sh
 kubectl create -f docs/deploy/local/endpoint.yml
-kubectl get endpointslice
+kubectl get endpointslice moperator-1 -o yaml
 ```
 
 验证转发是否成功, 测试是否成正常转发到本地服务
