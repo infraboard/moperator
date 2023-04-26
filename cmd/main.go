@@ -105,7 +105,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	// 注册controller
+	// // 注册controller
 	// if err = (&job.Reconciler{
 	// 	Client: mgr.GetClient(),
 	// 	Scheme: mgr.GetScheme(),

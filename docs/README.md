@@ -10,6 +10,8 @@ make run 会报如下错
 1.646924212701068e+09 ERROR setup problem running manager {"error": "open /var/folders/67/375276sx6hv0nln1whwm5syh0000gq/T/k8s-webhook-server/serving-certs/tls.crt: no such file or directory"}
 ```
 
+### 准备证书
+
 下面是一个自动创建客户端证书的脚本: [create-signed-cert.sh](https://raw.githubusercontent.com/kubernetes-sigs/windows-gmsa/master/admission-webhook/deploy/create-signed-cert.sh)
 ```sh
 Generates certificate suitable for use with the GMSA webhook service.
@@ -26,6 +28,62 @@ If --dry-run is set, the script echoes what command it would perform
 to stdout without actually affecting the k8s cluster.
 If the files this script generates already exist and --overwrite is
 not set, it will not regenerate the files.
+```
+
+
+
+### 配置转发
+
+[没有选择算符的 Service](https://kubernetes.io/zh-cn/docs/concepts/services-networking/service/#services-without-selectors)
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: moperator
+spec:
+  ports:
+    - port: 443
+      protocol: TCP
+      targetPort: 9443
+```
+
+直接使用yml创建:
+```sh
+kubectl create -f docs/deploy/local/service.yml
+kubectl get svc
+```
+
+手动添加 EndpointSlice
+```yaml
+apiVersion: discovery.k8s.io/v1
+kind: EndpointSlice
+metadata:
+  name: moperator-1 # 按惯例将服务的名称用作 EndpointSlice 名称的前缀
+  labels:
+    # 你应设置 "kubernetes.io/service-name" 标签。
+    # 设置其值以匹配服务的名称
+    kubernetes.io/service-name: moperator
+addressType: IPv4
+ports:
+  - name: '' # 留空，因为 port 9376 未被 IANA 分配为已注册端口
+    appProtocol: http
+    protocol: TCP
+    port: 9443
+endpoints:
+  - addresses:
+      - "10.4.5.6" 修改为你本地ip
+```
+
+直接使用yml创建:
+```sh
+kubectl create -f docs/deploy/local/endpoint.yml
+kubectl get endpointslice
+```
+
+配置WebHook转发
+```sh
+kubectl create -f docs/deploy/local/webhook_config.yaml
+kubectl get mutatingWebhookConfiguration
 ```
 
 ## 线上部署
