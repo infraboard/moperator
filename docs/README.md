@@ -32,7 +32,7 @@ not set, it will not regenerate the files.
 
 
 
-### 配置转发
+### 服务转发配置
 
 [没有选择算符的 Service](https://kubernetes.io/zh-cn/docs/concepts/services-networking/service/#services-without-selectors)
 ```yaml
@@ -80,11 +80,18 @@ kubectl create -f docs/deploy/local/endpoint.yml
 kubectl get endpointslice
 ```
 
-配置WebHook转发
+验证转发是否成功, 测试是否成正常转发到本地服务
+```sh
+curl https://cluster_ip:443/mutate--v1-pod
+```
+
+### Webhook配置
+
 ```sh
 kubectl create -f docs/deploy/local/webhook_config.yaml
 kubectl get mutatingWebhookConfiguration
 ```
+
 
 ## 线上部署
 
