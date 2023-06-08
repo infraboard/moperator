@@ -29,7 +29,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log"
 
 	"github.com/infraboard/mpaas/apps/task"
-	mpaas "github.com/infraboard/mpaas/client/rpc"
+	mpaas "github.com/infraboard/mpaas/clients/rpc"
 	"github.com/infraboard/mpaas/common/format"
 )
 
