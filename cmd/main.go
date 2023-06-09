@@ -38,7 +38,7 @@ import (
 
 	//+kubebuilder:scaffold:imports
 
-	mpaas "github.com/infraboard/mpaas/client/rpc"
+	mpaas "github.com/infraboard/mpaas/clients/rpc"
 )
 
 var (
