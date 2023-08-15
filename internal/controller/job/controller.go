@@ -105,18 +105,7 @@ func (r *Reconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Resu
 		}
 	}
 
-	if updateReq.Stage.Equal(task.STAGE_PENDDING) {
-		l.Info("task status is pendding, skip update")
-		return ctrl.Result{}, nil
-	}
-
-	// 比对状态, 状态没变化不更新
-	if t.Status.Stage.Equal(updateReq.Stage) {
-		l.Info(fmt.Sprintf("task status is %s, not changed", updateReq.Stage))
-		return ctrl.Result{}, nil
-	}
-
-	// 状态变化更新
+	// 状态变化更新, 运行一种状态多次更新, 获取更多细节信息
 	updateReq.UpdateToken = t.Spec.UpdateToken
 	updateReq.Detail = format.MustToYaml(obj)
 	_, err = r.mpaas.JobTask().UpdateJobTaskStatus(ctx, updateReq)
