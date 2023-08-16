@@ -19,6 +19,7 @@ package pod
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/infraboard/mpaas/apps/task"
 	mpaas "github.com/infraboard/mpaas/clients/rpc"
@@ -74,7 +75,7 @@ func (r *PodReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.R
 
 	// 根据注解获取task id, 更新Task状态
 	taskId := obj.Labels["job-name"]
-	if taskId == "" {
+	if taskId != "" && strings.HasPrefix(taskId, "task-") {
 		l.Info(fmt.Sprintf("get mpaas task: %s", taskId))
 
 		// 查询Task, 获取更新Token
@@ -89,7 +90,8 @@ func (r *PodReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.R
 		updateReq.UpdateToken = t.Spec.UpdateToken
 		updateReq.Stage = task.STAGE_ACTIVE
 		updateReq.Message = fmt.Sprintf("Pod Status: %s", obj.Status.Phase)
-		updateReq.Extension["pod"] = format.MustToYaml(obj)
+		updateReq.Extension[task.EXTENSION_FOR_TASK_POD_DETAIL] = format.MustToYaml(obj)
+		updateReq.Extension[task.EXTENSION_FOR_TASK_POD_STATUS] = string(obj.Status.Phase)
 		_, err = r.mpaas.JobTask().UpdateJobTaskStatus(ctx, updateReq)
 		if err != nil {
 			l.Error(err, "update failed")

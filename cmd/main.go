@@ -34,6 +34,7 @@ import (
 	mpaasv1 "github.com/infraboard/moperator/api/v1"
 	"github.com/infraboard/moperator/internal/controller/deployment"
 	"github.com/infraboard/moperator/internal/controller/job"
+	"github.com/infraboard/moperator/internal/controller/pod"
 	"github.com/infraboard/moperator/internal/controller/statefulset"
 
 	//+kubebuilder:scaffold:imports
@@ -107,6 +108,13 @@ func main() {
 		Scheme: mgr.GetScheme(),
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "job")
+		os.Exit(1)
+	}
+	if err = (&pod.PodReconciler{
+		Client: mgr.GetClient(),
+		Scheme: mgr.GetScheme(),
+	}).SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "pod")
 		os.Exit(1)
 	}
 	if err = (&deployment.Reconciler{

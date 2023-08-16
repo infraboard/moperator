@@ -84,6 +84,8 @@ func (r *Reconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Resu
 
 	// 判断job当前状态
 	updateReq := task.NewUpdateJobTaskStatusRequest(taskId)
+	// Job的状态默认为创建中
+	updateReq.Stage = task.STAGE_CREATING
 	for _, cond := range obj.Status.Conditions {
 		switch cond.Type {
 		case batchv1.JobFailed, batchv1.JobFailureTarget:
@@ -97,10 +99,6 @@ func (r *Reconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Resu
 			if cond.Status == corev1.ConditionTrue && !updateReq.Stage.Equal(task.STAGE_FAILED) {
 				updateReq.Stage = task.STAGE_SUCCEEDED
 				updateReq.Message = "执行成功"
-			}
-		case batchv1.JobSuspended:
-			if cond.Status == corev1.ConditionTrue {
-				updateReq.Stage = task.STAGE_CREATING
 			}
 		}
 	}
