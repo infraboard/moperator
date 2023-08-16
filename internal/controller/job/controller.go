@@ -100,7 +100,7 @@ func (r *Reconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Resu
 			}
 		case batchv1.JobSuspended:
 			if cond.Status == corev1.ConditionTrue {
-				updateReq.Stage = task.STAGE_ACTIVE
+				updateReq.Stage = task.STAGE_CREATING
 			}
 		}
 	}

@@ -18,7 +18,11 @@ package pod
 
 import (
 	"context"
+	"fmt"
 
+	"github.com/infraboard/mpaas/apps/task"
+	mpaas "github.com/infraboard/mpaas/clients/rpc"
+	"github.com/infraboard/mpaas/common/format"
 	v1 "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -31,6 +35,8 @@ import (
 type PodReconciler struct {
 	client.Client
 	Scheme *runtime.Scheme
+
+	mpaas *mpaas.ClientSet
 }
 
 //+kubebuilder:rbac:groups=mpaas.mdevcloud.com,resources=pods,verbs=get;list;watch;create;update;patch;delete
@@ -62,11 +68,43 @@ func (r *PodReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.R
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
 
+	if obj.Labels == nil {
+		obj.Labels = map[string]string{}
+	}
+
+	// 根据注解获取task id, 更新Task状态
+	taskId := obj.Labels["job-name"]
+	if taskId == "" {
+		l.Info(fmt.Sprintf("get mpaas task: %s", taskId))
+
+		// 查询Task, 获取更新Token
+		t, err := r.mpaas.JobTask().DescribeJobTask(ctx, task.NewDescribeJobTaskRequest(taskId))
+		if err != nil {
+			l.Error(err, "get task error")
+			return ctrl.Result{}, nil
+		}
+
+		// 当Pod处于Running时
+		updateReq := task.NewUpdateJobTaskStatusRequest(taskId)
+		updateReq.UpdateToken = t.Spec.UpdateToken
+		updateReq.Stage = task.STAGE_ACTIVE
+		updateReq.Message = fmt.Sprintf("Pod Status: %s", obj.Status.Phase)
+		updateReq.Extension["pod"] = format.MustToYaml(obj)
+		_, err = r.mpaas.JobTask().UpdateJobTaskStatus(ctx, updateReq)
+		if err != nil {
+			l.Error(err, "update failed")
+			return ctrl.Result{}, nil
+		}
+
+		l.Info("update success")
+	}
+
 	return ctrl.Result{}, nil
 }
 
 // SetupWithManager sets up the controller with the Manager.
 func (r *PodReconciler) SetupWithManager(mgr ctrl.Manager) error {
+	r.mpaas = mpaas.C()
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&v1.Pod{}).
 		Complete(r)
