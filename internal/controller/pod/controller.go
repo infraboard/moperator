@@ -89,9 +89,9 @@ func (r *PodReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.R
 		updateReq := task.NewUpdateJobTaskStatusRequest(taskId)
 		updateReq.UpdateToken = t.Spec.UpdateToken
 		updateReq.Stage = task.STAGE_ACTIVE
-		updateReq.Message = fmt.Sprintf("Pod Status: %s", obj.Status.Phase)
-		updateReq.Extension[task.EXTENSION_FOR_TASK_POD_DETAIL] = format.MustToYaml(obj)
-		updateReq.Extension[task.EXTENSION_FOR_TASK_POD_STATUS] = string(obj.Status.Phase)
+		updateReq.Message = fmt.Sprintf("Pod %s Status: %s", obj.Name, obj.Status.Phase)
+		updateReq.Extension[t.Status.GetOrNewPodKey(obj.Name)] = format.MustToYaml(obj)
+
 		_, err = r.mpaas.JobTask().UpdateJobTaskStatus(ctx, updateReq)
 		if err != nil {
 			l.Error(err, "update failed")
