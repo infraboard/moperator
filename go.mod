@@ -4,7 +4,7 @@ go 1.19
 
 require (
 	github.com/infraboard/mflow v0.0.0-20230823031557-036b2996f9e3
-	github.com/infraboard/mpaas v0.0.3-0.20230630085442-00be8a28743d
+	github.com/infraboard/mpaas v0.0.3
 	github.com/onsi/ginkgo/v2 v2.9.7
 	github.com/onsi/gomega v1.27.8
 	k8s.io/api v0.27.3
