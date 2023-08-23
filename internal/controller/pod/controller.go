@@ -21,8 +21,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/infraboard/mpaas/apps/task"
-	mpaas "github.com/infraboard/mpaas/clients/rpc"
+	"github.com/infraboard/mflow/apps/task"
+	mflow "github.com/infraboard/mflow/clients/rpc"
 	"github.com/infraboard/mpaas/common/format"
 	v1 "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
@@ -37,7 +37,7 @@ type PodReconciler struct {
 	client.Client
 	Scheme *runtime.Scheme
 
-	mpaas *mpaas.ClientSet
+	mflow *mflow.ClientSet
 }
 
 //+kubebuilder:rbac:groups=mpaas.mdevcloud.com,resources=pods,verbs=get;list;watch;create;update;patch;delete
@@ -79,7 +79,7 @@ func (r *PodReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.R
 		l.Info(fmt.Sprintf("get mpaas task: %s", taskId))
 
 		// 查询Task, 获取更新Token
-		t, err := r.mpaas.JobTask().DescribeJobTask(ctx, task.NewDescribeJobTaskRequest(taskId))
+		t, err := r.mflow.JobTask().DescribeJobTask(ctx, task.NewDescribeJobTaskRequest(taskId))
 		if err != nil {
 			l.Error(err, "get task error")
 			return ctrl.Result{}, nil
@@ -92,7 +92,7 @@ func (r *PodReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.R
 		updateReq.Message = fmt.Sprintf("Pod %s Status: %s", obj.Name, obj.Status.Phase)
 		updateReq.Extension[t.Status.GetOrNewPodKey(obj.Name)] = format.MustToYaml(obj)
 
-		_, err = r.mpaas.JobTask().UpdateJobTaskStatus(ctx, updateReq)
+		_, err = r.mflow.JobTask().UpdateJobTaskStatus(ctx, updateReq)
 		if err != nil {
 			l.Error(err, "update failed")
 			return ctrl.Result{}, nil
@@ -106,7 +106,7 @@ func (r *PodReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.R
 
 // SetupWithManager sets up the controller with the Manager.
 func (r *PodReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	r.mpaas = mpaas.C()
+	r.mflow = mflow.C()
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&v1.Pod{}).
 		Complete(r)

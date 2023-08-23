@@ -28,8 +28,8 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 
-	"github.com/infraboard/mpaas/apps/task"
-	mpaas "github.com/infraboard/mpaas/clients/rpc"
+	"github.com/infraboard/mflow/apps/task"
+	mflow "github.com/infraboard/mflow/clients/rpc"
 	"github.com/infraboard/mpaas/common/format"
 )
 
@@ -38,7 +38,7 @@ type Reconciler struct {
 	client.Client
 	Scheme *runtime.Scheme
 
-	mpaas *mpaas.ClientSet
+	mflow *mflow.ClientSet
 }
 
 //+kubebuilder:rbac:groups=mpaas.mdevcloud.com,resources=pods,verbs=get;list;watch;create;update;patch;delete
@@ -78,7 +78,7 @@ func (r *Reconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Resu
 	l.Info(fmt.Sprintf("get mpaas job: %s", taskId))
 
 	// 查询Task
-	t, err := r.mpaas.JobTask().DescribeJobTask(ctx, task.NewDescribeJobTaskRequest(taskId))
+	t, err := r.mflow.JobTask().DescribeJobTask(ctx, task.NewDescribeJobTaskRequest(taskId))
 	if err != nil {
 		l.Error(err, "get task error")
 		return ctrl.Result{}, nil
@@ -121,7 +121,7 @@ func (r *Reconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Resu
 	// 状态变化更新
 	updateReq.UpdateToken = t.Spec.UpdateToken
 	updateReq.Detail = format.MustToYaml(obj)
-	_, err = r.mpaas.JobTask().UpdateJobTaskStatus(ctx, updateReq)
+	_, err = r.mflow.JobTask().UpdateJobTaskStatus(ctx, updateReq)
 	if err != nil {
 		l.Error(err, "update failed")
 		return ctrl.Result{}, nil
@@ -134,7 +134,7 @@ func (r *Reconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Resu
 
 // SetupWithManager sets up the controller with the Manager.
 func (r *Reconciler) SetupWithManager(mgr ctrl.Manager) error {
-	r.mpaas = mpaas.C()
+	r.mflow = mflow.C()
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&appsv1.StatefulSet{}).
 		Complete(r)

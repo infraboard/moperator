@@ -27,6 +27,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 
+	mflow "github.com/infraboard/mflow/clients/rpc"
 	mpaas "github.com/infraboard/mpaas/clients/rpc"
 )
 
@@ -35,6 +36,7 @@ type Reconciler struct {
 	client.Client
 	Scheme *runtime.Scheme
 
+	mflow *mflow.ClientSet
 	mpaas *mpaas.ClientSet
 	name  string
 }

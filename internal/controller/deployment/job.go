@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/infraboard/mpaas/apps/task"
+	"github.com/infraboard/mflow/apps/task"
 	"github.com/infraboard/mpaas/common/format"
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
@@ -23,7 +23,7 @@ func (r *Reconciler) HandleJobTask(ctx context.Context, obj appsv1.Deployment) e
 	l.Info(fmt.Sprintf("get mpaas job: %s", taskId))
 
 	// 查询Task
-	t, err := r.mpaas.JobTask().DescribeJobTask(ctx, task.NewDescribeJobTaskRequest(taskId))
+	t, err := r.mflow.JobTask().DescribeJobTask(ctx, task.NewDescribeJobTaskRequest(taskId))
 	if err != nil {
 		return fmt.Errorf("get task error, %s", err)
 	}
@@ -63,7 +63,7 @@ func (r *Reconciler) HandleJobTask(ctx context.Context, obj appsv1.Deployment) e
 	// 状态变化更新
 	updateReq.UpdateToken = t.Spec.UpdateToken
 	updateReq.Detail = format.MustToYaml(obj)
-	_, err = r.mpaas.JobTask().UpdateJobTaskStatus(ctx, updateReq)
+	_, err = r.mflow.JobTask().UpdateJobTaskStatus(ctx, updateReq)
 	if err != nil {
 		return fmt.Errorf("update jot task status error, %s", err)
 	}

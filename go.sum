@@ -122,10 +122,12 @@ github.com/gorilla/websocket v1.5.0/go.mod h1:YR8l580nyteQvAITg2hZ9XVh4b55+EU/ad
 github.com/ianlancetaylor/demangle v0.0.0-20200824232613-28f6c0f3b639/go.mod h1:aSSvb/t6k1mPoxDqO4vJh6VOCGPwU4O0C2/Eqndh1Sc=
 github.com/imdario/mergo v0.3.16 h1:wwQJbIsHYGMUyLSPrEq1CT16AhnhNJQ51+4fdHUnCl4=
 github.com/imdario/mergo v0.3.16/go.mod h1:WBLT9ZmE3lPoWsEzCh9LPo3TiwVN+ZKEjmz+hD27ysY=
-github.com/infraboard/mcenter v0.0.11-0.20230630085336-546f13926a3a h1:EwpbXxCMo39ece88Twvi/PBFV+CBoWk/4q2N4gdyNq0=
-github.com/infraboard/mcenter v0.0.11-0.20230630085336-546f13926a3a/go.mod h1:iLbPItjpXMwCqq/yv3RUSN7NRT2bgbjZobMw8GHyl4I=
-github.com/infraboard/mcube v1.9.16 h1:kVPg0RuXBHRNd+u90x/wOKDEhdfkWPCSJQj0PEk/JRk=
-github.com/infraboard/mcube v1.9.16/go.mod h1:P9P87O8H6eMGHytBjGn9V4feWXSCnT0UkjKSp3qN/ZE=
+github.com/infraboard/mcenter v0.0.11-0.20230714083219-4cc7fc0bf8ec h1:lAzuoEkBD5Q+zFq02ojULha7BPE8ikblzGSfWcXVWh0=
+github.com/infraboard/mcenter v0.0.11-0.20230714083219-4cc7fc0bf8ec/go.mod h1:fHauqdfKS7BAW9/1iU/k4Vwg0EAdUqzb27XjTJwpToQ=
+github.com/infraboard/mcube v1.9.17 h1:YgGy8MEnaRNi7guZWRFfJDoDuQhVxvG+nVkun5Y3rqg=
+github.com/infraboard/mcube v1.9.17/go.mod h1:P9P87O8H6eMGHytBjGn9V4feWXSCnT0UkjKSp3qN/ZE=
+github.com/infraboard/mflow v0.0.0-20230823031557-036b2996f9e3 h1:TABqGQgsIhRe9ypksJxdaEnggflwX5T2TBTmFYTAhS8=
+github.com/infraboard/mflow v0.0.0-20230823031557-036b2996f9e3/go.mod h1:8IDsxq3POQ20l3cRKilj+oG5OmBm84IhLtCekRGhYao=
 github.com/infraboard/mpaas v0.0.3-0.20230630085442-00be8a28743d h1:azjNHrcWeoHcH9Q5Fb9IX5pm+wVXpySQMu6fAxBVhzo=
 github.com/infraboard/mpaas v0.0.3-0.20230630085442-00be8a28743d/go.mod h1:7W5dPlgyr11WBJ3thNVzFp7tKCV+HxsllwUbhUYu/no=
 github.com/jessevdk/go-flags v1.4.0/go.mod h1:4FA24M0QyGHXBuZZK/XkWh8h0e1EYbRYJSGM75WSRxI=
