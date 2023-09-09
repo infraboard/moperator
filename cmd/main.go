@@ -38,7 +38,7 @@ import (
 	"github.com/infraboard/moperator/internal/controller/statefulset"
 
 	//+kubebuilder:scaffold:imports
-
+	mflow "github.com/infraboard/mflow/clients/rpc"
 	mpaas "github.com/infraboard/mpaas/clients/rpc"
 )
 
@@ -74,6 +74,11 @@ func main() {
 	// 加载mpaas sdk
 	if err := mpaas.LoadClientFromEnv(); err != nil {
 		setupLog.Error(err, "load mpaas client error")
+		os.Exit(1)
+	}
+	// 加载mflow sdk
+	if err := mflow.LoadClientFromEnv(); err != nil {
+		setupLog.Error(err, "load mflow client error")
 		os.Exit(1)
 	}
 
