@@ -18,18 +18,17 @@ package pod
 
 import (
 	"context"
-	"fmt"
-	"strings"
+	"os"
 
-	"github.com/infraboard/mflow/apps/task"
-	mflow "github.com/infraboard/mflow/clients/rpc"
-	"github.com/infraboard/mpaas/common/format"
 	v1 "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log"
+
+	mflow "github.com/infraboard/mflow/clients/rpc"
+	mpaas "github.com/infraboard/mpaas/clients/rpc"
 )
 
 // PodReconciler reconciles a Pod object
@@ -37,7 +36,9 @@ type PodReconciler struct {
 	client.Client
 	Scheme *runtime.Scheme
 
+	mpaas *mpaas.ClientSet
 	mflow *mflow.ClientSet
+	name  string
 }
 
 //+kubebuilder:rbac:groups=mpaas.mdevcloud.com,resources=pods,verbs=get;list;watch;create;update;patch;delete
@@ -73,32 +74,14 @@ func (r *PodReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.R
 		obj.Labels = map[string]string{}
 	}
 
-	// 根据注解获取task id, 更新Task状态
-	taskId := obj.Labels["job-name"]
-	if taskId != "" && strings.HasPrefix(taskId, "task-") {
-		l.Info(fmt.Sprintf("get mpaas task: %s", taskId))
+	// 根据Job标签, 更新JobTask状态
+	if err := r.HandleJobTask(ctx, obj); err != nil {
+		l.Error(err, "update task error")
+	}
 
-		// 查询Task, 获取更新Token
-		t, err := r.mflow.JobTask().DescribeJobTask(ctx, task.NewDescribeJobTaskRequest(taskId))
-		if err != nil {
-			l.Error(err, "get task error")
-			return ctrl.Result{}, nil
-		}
-
-		// 当Pod处于Running时
-		updateReq := task.NewUpdateJobTaskStatusRequest(taskId)
-		updateReq.UpdateToken = t.Spec.UpdateToken
-		updateReq.Stage = task.STAGE_ACTIVE
-		updateReq.Message = fmt.Sprintf("Pod %s Status: %s", obj.Name, obj.Status.Phase)
-		updateReq.Extension[t.Status.GetOrNewPodKey(obj.Name)] = format.MustToYaml(obj)
-
-		_, err = r.mflow.JobTask().UpdateJobTaskStatus(ctx, updateReq)
-		if err != nil {
-			l.Error(err, "update failed")
-			return ctrl.Result{}, nil
-		}
-
-		l.Info("update success")
+	// 更新Deploy注解 更新Deploy
+	if err := r.HandleDeploy(ctx, obj); err != nil {
+		l.Error(err, "update deploy error")
 	}
 
 	return ctrl.Result{}, nil
@@ -106,7 +89,9 @@ func (r *PodReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.R
 
 // SetupWithManager sets up the controller with the Manager.
 func (r *PodReconciler) SetupWithManager(mgr ctrl.Manager) error {
+	r.mpaas = mpaas.C()
 	r.mflow = mflow.C()
+	r.name, _ = os.Hostname()
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&v1.Pod{}).
 		Complete(r)

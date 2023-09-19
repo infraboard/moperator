@@ -86,6 +86,7 @@ func (r *Reconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Resu
 // SetupWithManager sets up the controller with the Manager.
 func (r *Reconciler) SetupWithManager(mgr ctrl.Manager) error {
 	r.mpaas = mpaas.C()
+	r.mflow = mflow.C()
 	r.name, _ = os.Hostname()
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&appsv1.Deployment{}).
