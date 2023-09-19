@@ -31,7 +31,7 @@ func (r *PodReconciler) HandleDeploy(ctx context.Context, obj v1.Pod) error {
 			updateReq.UpdateToken = ins.Credential.Token
 		}
 
-		updateReq.UpdatedK8SConfig.Pods = format.MustToYaml(obj)
+		updateReq.UpdatedK8SConfig.Pods[obj.Name] = format.MustToYaml(obj)
 		updateReq.UpdateBy = r.name
 		_, err = r.mpaas.Deploy().UpdateDeploymentStatus(ctx, updateReq)
 		if err != nil {
@@ -39,5 +39,43 @@ func (r *PodReconciler) HandleDeploy(ctx context.Context, obj v1.Pod) error {
 		}
 		l.Info(fmt.Sprintf("deploy: %s, update success", deployId))
 	}
+	return nil
+}
+
+func (r *PodReconciler) DeletePod(ctx context.Context, namespace, name string) error {
+	// 获取日志对象
+	l := log.FromContext(ctx)
+
+	// 查询Deploy
+	query := deploy.NewQueryDeploymentRequest()
+	query.PodName = name
+	set, err := r.mpaas.Deploy().QueryDeployment(ctx, query)
+	if err != nil {
+		return fmt.Errorf("query deploy error, %s", err)
+	}
+
+	if set.Len() == 0 {
+		return nil
+	}
+
+	if set.Len() > 1 {
+		return fmt.Errorf("deployment find more than one, %d", set.Len())
+	}
+	ins := set.Items[0]
+
+	// 更新Depoy
+	updateReq := deploy.NewUpdateDeploymentStatusRequest(ins.Meta.Id)
+	if ins.Credential != nil {
+		updateReq.UpdateToken = ins.Credential.Token
+	}
+
+	updateReq.UpdatedK8SConfig.Pods[name] = ""
+	updateReq.UpdateBy = r.name
+	_, err = r.mpaas.Deploy().UpdateDeploymentStatus(ctx, updateReq)
+	if err != nil {
+		return err
+	}
+	l.Info(fmt.Sprintf("delete pod %s from deploy %s success", name, ins.Meta.Id))
+
 	return nil
 }

@@ -21,7 +21,6 @@ import (
 	"os"
 
 	v1 "k8s.io/api/core/v1"
-	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -64,9 +63,7 @@ func (r *PodReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.R
 	var obj v1.Pod
 	if err := r.Get(ctx, req.NamespacedName, &obj); err != nil {
 		// 如果Pod对象不存在就删除该Pod
-		if apierrors.IsNotFound(err) {
-			l.Info(err.Error())
-		}
+		r.DeletePod(ctx, req.Namespace, req.Name)
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
 
