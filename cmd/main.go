@@ -31,15 +31,13 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
+	"github.com/infraboard/mcube/ioc"
 	mpaasv1 "github.com/infraboard/moperator/api/v1"
 	"github.com/infraboard/moperator/internal/controller/deployment"
 	"github.com/infraboard/moperator/internal/controller/job"
 	"github.com/infraboard/moperator/internal/controller/pod"
 	"github.com/infraboard/moperator/internal/controller/statefulset"
-
 	//+kubebuilder:scaffold:imports
-	mflow "github.com/infraboard/mflow/clients/rpc"
-	mpaas "github.com/infraboard/mpaas/clients/rpc"
 )
 
 var (
@@ -71,16 +69,7 @@ func main() {
 
 	ctrl.SetLogger(zap.New(zap.UseFlagOptions(&opts)))
 
-	// 加载mpaas sdk
-	if err := mpaas.LoadClientFromEnv(); err != nil {
-		setupLog.Error(err, "load mpaas client error")
-		os.Exit(1)
-	}
-	// 加载mflow sdk
-	if err := mflow.LoadClientFromEnv(); err != nil {
-		setupLog.Error(err, "load mflow client error")
-		os.Exit(1)
-	}
+	ioc.DevelopmentSetup()
 
 	mgr, err := ctrl.NewManager(ctrl.GetConfigOrDie(), ctrl.Options{
 		Scheme:                 scheme,
