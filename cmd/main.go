@@ -31,7 +31,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
-	"github.com/infraboard/mcube/ioc"
+	"github.com/infraboard/mcube/v2/ioc"
 	mpaasv1 "github.com/infraboard/moperator/api/v1"
 	"github.com/infraboard/moperator/internal/controller/deployment"
 	"github.com/infraboard/moperator/internal/controller/job"
