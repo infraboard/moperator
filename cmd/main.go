@@ -36,6 +36,7 @@ import (
 	"github.com/infraboard/moperator/internal/controller/deployment"
 	"github.com/infraboard/moperator/internal/controller/job"
 	"github.com/infraboard/moperator/internal/controller/pod"
+	"github.com/infraboard/moperator/internal/controller/service"
 	"github.com/infraboard/moperator/internal/controller/statefulset"
 	//+kubebuilder:scaffold:imports
 )
@@ -123,6 +124,13 @@ func main() {
 		Scheme: mgr.GetScheme(),
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "statefulset")
+		os.Exit(1)
+	}
+	if err = (&service.Reconciler{
+		Client: mgr.GetClient(),
+		Scheme: mgr.GetScheme(),
+	}).SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "service")
 		os.Exit(1)
 	}
 
