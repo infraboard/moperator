@@ -73,12 +73,12 @@ func (r *PodReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.R
 
 	// 根据Job标签, 更新JobTask状态
 	if err := r.HandleJobTask(ctx, obj); err != nil {
-		l.Error(err, "update task error")
+		l.Error(err, "update mflow job task error")
 	}
 
 	// 更新Deploy注解 更新Deploy
 	if err := r.HandleDeploy(ctx, obj); err != nil {
-		l.Error(err, "update deploy error")
+		l.Error(err, "update mpaas deploy error")
 	}
 
 	return ctrl.Result{}, nil

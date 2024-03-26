@@ -17,12 +17,12 @@ func (r *PodReconciler) HandleJobTask(ctx context.Context, obj v1.Pod) error {
 
 	taskId := obj.Labels["job-name"]
 	if taskId != "" && strings.HasPrefix(taskId, "task-") {
-		l.Info(fmt.Sprintf("get mpaas task: %s", taskId))
+		l.Info(fmt.Sprintf("get mflow task: %s, start sync", taskId))
 
 		// 查询Task, 获取更新Token
 		t, err := r.mflow.JobTask().DescribeJobTask(ctx, task.NewDescribeJobTaskRequest(taskId))
 		if err != nil {
-			return fmt.Errorf("get task error, %s", err)
+			return fmt.Errorf("get mflow task error, %s", err)
 		}
 
 		// 当Pod处于Running时
@@ -34,8 +34,9 @@ func (r *PodReconciler) HandleJobTask(ctx context.Context, obj v1.Pod) error {
 
 		_, err = r.mflow.JobTask().UpdateJobTaskStatus(ctx, updateReq)
 		if err != nil {
-			return fmt.Errorf("update failed, %s", err)
+			return fmt.Errorf("update mflow task failed, %s", err)
 		}
+		l.Info(fmt.Sprintf("sync mflow task success: %s ", taskId))
 	}
 	return nil
 }
