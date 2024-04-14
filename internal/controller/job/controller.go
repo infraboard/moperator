@@ -85,7 +85,7 @@ func (r *Reconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Resu
 	// 判断job当前状态
 	updateReq := task.NewUpdateJobTaskStatusRequest(taskId)
 	// Job的状态默认为创建中
-	updateReq.Stage = task.STAGE_CREATING
+	updateReq.Stage = task.STAGE_ACTIVE
 	for _, cond := range obj.Status.Conditions {
 		switch cond.Type {
 		case batchv1.JobFailed, batchv1.JobFailureTarget:
