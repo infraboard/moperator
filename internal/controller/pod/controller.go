@@ -21,6 +21,7 @@ import (
 	"os"
 
 	v1 "k8s.io/api/core/v1"
+	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -57,13 +58,13 @@ func (r *PodReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.R
 	// 获取日志对象
 	l := log.FromContext(ctx)
 
-	// TODO(user): your logic here
-
 	// 1.通过名称获取Pod对象, 并打印
 	var obj v1.Pod
 	if err := r.Get(ctx, req.NamespacedName, &obj); err != nil {
 		// 如果Pod对象不存在就删除该Pod
-		r.DeletePod(ctx, req.Namespace, req.Name)
+		if apierrors.IsNotFound(err) {
+			r.DeletePod(ctx, req.Namespace, req.Name)
+		}
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
 

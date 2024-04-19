@@ -73,7 +73,7 @@ func (r *PodReconciler) DeletePod(ctx context.Context, namespace, name string) e
 	updateReq.UpdateBy = r.name
 	_, err = r.mpaas.Deploy().UpdateDeploymentStatus(ctx, updateReq)
 	if err != nil {
-		return err
+		return fmt.Errorf("update deploy status error, %s", err)
 	}
 	l.Info(fmt.Sprintf("delete pod %s from deploy %s success", name, ins.Meta.Id))
 
