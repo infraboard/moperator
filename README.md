@@ -18,7 +18,8 @@ kubectl apply -f config/samples/
 2. Build and push your image to the location specified by `IMG`:
 
 ```sh
-make docker-build docker-push IMG=<some-registry>/moperator:tag
+# make docker-build docker-push IMG=<some-registry>/moperator:tag
+docker buildx build  --platform linux/amd64 -t moperator .
 ```
 
 3. Deploy the controller to the cluster with the image specified by `IMG`:
@@ -91,4 +92,3 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-
