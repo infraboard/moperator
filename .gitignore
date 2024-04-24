@@ -24,6 +24,7 @@ Dockerfile.cross
 *.swp
 *.swo
 *~
+.netrc
 
 # 自定义需要忽略的文件
 config.env
