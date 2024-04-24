@@ -31,4 +31,8 @@ WORKDIR /
 COPY --from=builder /workspace/manager .
 USER 65532:65532
 
+ENV MCENTER_GRPC_ADDRESS=127.0.0.1:18010 \
+MCENTER_CLINET_ID=moperator \
+MCENTER_CLIENT_SECRET=moperator
+
 ENTRYPOINT ["/manager"]
