@@ -30,6 +30,7 @@ func (r *Reconciler) HandleDeploy(ctx context.Context, obj appsv1.Deployment) er
 
 	// 更新Depoy
 	updateReq := deploy.NewUpdateDeploymentStatusRequest(deployId)
+
 	if ins.Credential != nil {
 		updateReq.UpdateToken = ins.Credential.Token
 	}

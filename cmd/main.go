@@ -38,6 +38,7 @@ import (
 	"github.com/infraboard/moperator/internal/controller/pod"
 	"github.com/infraboard/moperator/internal/controller/service"
 	"github.com/infraboard/moperator/internal/controller/statefulset"
+	metricsserver "sigs.k8s.io/controller-runtime/pkg/metrics/server"
 	//+kubebuilder:scaffold:imports
 )
 
@@ -74,8 +75,7 @@ func main() {
 
 	mgr, err := ctrl.NewManager(ctrl.GetConfigOrDie(), ctrl.Options{
 		Scheme:                 scheme,
-		MetricsBindAddress:     metricsAddr,
-		Port:                   9443,
+		Metrics:                metricsserver.Options{BindAddress: metricsAddr},
 		HealthProbeBindAddress: probeAddr,
 		LeaderElection:         enableLeaderElection,
 		LeaderElectionID:       "0a04a608.mdevcloud.com",
