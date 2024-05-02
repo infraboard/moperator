@@ -3,9 +3,9 @@ module github.com/infraboard/moperator
 go 1.22.0
 
 require (
-	github.com/infraboard/mcube/v2 v2.0.12
-	github.com/infraboard/mflow v0.0.9
-	github.com/infraboard/mpaas v0.0.13
+	github.com/infraboard/mcube/v2 v2.0.13
+	github.com/infraboard/mflow v0.0.11
+	github.com/infraboard/mpaas v0.0.14
 	github.com/onsi/ginkgo/v2 v2.17.1
 	github.com/onsi/gomega v1.32.0
 	k8s.io/api v0.30.0
@@ -46,7 +46,7 @@ require (
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/gorilla/websocket v1.5.0 // indirect
 	github.com/imdario/mergo v0.3.16 // indirect
-	github.com/infraboard/mcenter v0.0.31 // indirect
+	github.com/infraboard/mcenter v0.0.33 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/leodido/go-urn v1.4.0 // indirect
@@ -97,7 +97,7 @@ require (
 	k8s.io/apiextensions-apiserver v0.30.0 // indirect
 	k8s.io/klog/v2 v2.120.1 // indirect
 	k8s.io/kube-openapi v0.0.0-20240228011516-70dd3763d340 // indirect
-	k8s.io/kubectl v0.29.3 // indirect
+	k8s.io/kubectl v0.30.0 // indirect
 	k8s.io/utils v0.0.0-20240310230437-4693a0247e57 // indirect
 	sigs.k8s.io/json v0.0.0-20221116044647-bc3834ca7abd // indirect
 	sigs.k8s.io/structured-merge-diff/v4 v4.4.1 // indirect
