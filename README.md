@@ -18,6 +18,7 @@ kubectl apply -f config/samples/
 2. Build and push your image to the location specified by `IMG`:
 
 ```sh
+export GOPRIVATE=github.com/infraboard
 # make docker-build docker-push IMG=<some-registry>/moperator:tag
 docker buildx build  --platform linux/amd64 -t moperator .
 ```
