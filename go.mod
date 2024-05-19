@@ -4,8 +4,8 @@ go 1.22.0
 
 require (
 	github.com/infraboard/mcube/v2 v2.0.15
-	github.com/infraboard/mflow v0.0.14
-	github.com/infraboard/mpaas v0.0.17
+	github.com/infraboard/mflow v0.0.15
+	github.com/infraboard/mpaas v0.0.18
 	github.com/onsi/ginkgo/v2 v2.17.1
 	github.com/onsi/gomega v1.32.0
 	k8s.io/api v0.30.0
@@ -46,7 +46,7 @@ require (
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/gorilla/websocket v1.5.1 // indirect
 	github.com/imdario/mergo v0.3.16 // indirect
-	github.com/infraboard/mcenter v0.0.36 // indirect
+	github.com/infraboard/mcenter v0.0.37 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/leodido/go-urn v1.4.0 // indirect
