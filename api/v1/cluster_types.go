@@ -1,5 +1,5 @@
 /*
-Copyright 2023 maojun.
+Copyright 2024.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -23,42 +23,42 @@ import (
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
 // NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
 
-// PodSpec defines the desired state of Pod
-type PodSpec struct {
+// ClusterSpec defines the desired state of Cluster
+type ClusterSpec struct {
 	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 
-	// Foo is an example field of Pod. Edit pod_types.go to remove/update
+	// Foo is an example field of Cluster. Edit cluster_types.go to remove/update
 	Foo string `json:"foo,omitempty"`
 }
 
-// PodStatus defines the observed state of Pod
-type PodStatus struct {
+// ClusterStatus defines the observed state of Cluster
+type ClusterStatus struct {
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 }
 
-//+kubebuilder:object:root=true
-//+kubebuilder:subresource:status
+// +kubebuilder:object:root=true
+// +kubebuilder:subresource:status
 
-// Pod is the Schema for the pods API
-type Pod struct {
+// Cluster is the Schema for the clusters API
+type Cluster struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   PodSpec   `json:"spec,omitempty"`
-	Status PodStatus `json:"status,omitempty"`
+	Spec   ClusterSpec   `json:"spec,omitempty"`
+	Status ClusterStatus `json:"status,omitempty"`
 }
 
-//+kubebuilder:object:root=true
+// +kubebuilder:object:root=true
 
-// PodList contains a list of Pod
-type PodList struct {
+// ClusterList contains a list of Cluster
+type ClusterList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []Pod `json:"items"`
+	Items           []Cluster `json:"items"`
 }
 
 func init() {
-	SchemeBuilder.Register(&Pod{}, &PodList{})
+	SchemeBuilder.Register(&Cluster{}, &ClusterList{})
 }

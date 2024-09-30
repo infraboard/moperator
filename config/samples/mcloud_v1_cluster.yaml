@@ -1,0 +1,9 @@
+apiVersion: mcloud.infraboard/v1
+kind: Cluster
+metadata:
+  labels:
+    app.kubernetes.io/name: moperator
+    app.kubernetes.io/managed-by: kustomize
+  name: cluster-sample
+spec:
+  # TODO(user): Add fields here
