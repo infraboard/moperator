@@ -1,5 +1,5 @@
 /*
-Copyright 2024.
+Copyright 2025.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -27,10 +27,10 @@ import (
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
-	mcloudv1 "github.com/infraboard/moperator/api/v1"
+	devopsv1beta1 "github.com/infraboard/devops/moperator/api/v1beta1"
 )
 
-var _ = Describe("Cluster Controller", func() {
+var _ = Describe("Mcloud Controller", func() {
 	Context("When reconciling a resource", func() {
 		const resourceName = "test-resource"
 
@@ -40,13 +40,13 @@ var _ = Describe("Cluster Controller", func() {
 			Name:      resourceName,
 			Namespace: "default", // TODO(user):Modify as needed
 		}
-		cluster := &mcloudv1.Cluster{}
+		mcloud := &devopsv1beta1.Mcloud{}
 
 		BeforeEach(func() {
-			By("creating the custom resource for the Kind Cluster")
-			err := k8sClient.Get(ctx, typeNamespacedName, cluster)
+			By("creating the custom resource for the Kind Mcloud")
+			err := k8sClient.Get(ctx, typeNamespacedName, mcloud)
 			if err != nil && errors.IsNotFound(err) {
-				resource := &mcloudv1.Cluster{
+				resource := &devopsv1beta1.Mcloud{
 					ObjectMeta: metav1.ObjectMeta{
 						Name:      resourceName,
 						Namespace: "default",
@@ -59,16 +59,16 @@ var _ = Describe("Cluster Controller", func() {
 
 		AfterEach(func() {
 			// TODO(user): Cleanup logic after each test, like removing the resource instance.
-			resource := &mcloudv1.Cluster{}
+			resource := &devopsv1beta1.Mcloud{}
 			err := k8sClient.Get(ctx, typeNamespacedName, resource)
 			Expect(err).NotTo(HaveOccurred())
 
-			By("Cleanup the specific resource instance Cluster")
+			By("Cleanup the specific resource instance Mcloud")
 			Expect(k8sClient.Delete(ctx, resource)).To(Succeed())
 		})
 		It("should successfully reconcile the resource", func() {
 			By("Reconciling the created resource")
-			controllerReconciler := &ClusterReconciler{
+			controllerReconciler := &McloudReconciler{
 				Client: k8sClient,
 				Scheme: k8sClient.Scheme(),
 			}

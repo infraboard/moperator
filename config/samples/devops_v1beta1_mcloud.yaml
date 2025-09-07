@@ -1,9 +1,9 @@
-apiVersion: mcloud.infraboard/v1
-kind: Cluster
+apiVersion: devops.devops.mcloud/v1beta1
+kind: Mcloud
 metadata:
   labels:
     app.kubernetes.io/name: moperator
     app.kubernetes.io/managed-by: kustomize
-  name: cluster-sample
+  name: mcloud-sample
 spec:
   # TODO(user): Add fields here

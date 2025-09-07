@@ -2,19 +2,20 @@
 # This file is used to track the info used to scaffold your project
 # and allow the plugins properly work.
 # More info: https://book.kubebuilder.io/reference/project-config.html
-domain: infraboard
+cliVersion: 4.8.0
+domain: devops.mcloud
 layout:
 - go.kubebuilder.io/v4
 projectName: moperator
-repo: github.com/infraboard/moperator
+repo: github.com/infraboard/devops/moperator
 resources:
 - api:
     crdVersion: v1
     namespaced: true
   controller: true
-  domain: infraboard
-  group: mcloud
-  kind: Cluster
-  path: github.com/infraboard/moperator/api/v1
-  version: v1
+  domain: devops.mcloud
+  group: devops
+  kind: Mcloud
+  path: github.com/infraboard/devops/moperator/api/v1beta1
+  version: v1beta1
 version: "3"
