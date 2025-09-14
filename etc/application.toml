@@ -1,0 +1,6 @@
+[app]
+  name = "moperator"
+  description = "app desc"
+
+[devops_client]
+  address = "http://127.0.0.1:9090/jsonrpc/devcloud/v1"
